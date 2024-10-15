@@ -8,6 +8,7 @@ import {
 } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { HoverBorderGradient } from "./hover-border-gradient"; // Import HoverBorderGradient
 
 export const FloatingNav = ({
   navItems,
@@ -21,62 +22,55 @@ export const FloatingNav = ({
   className?: string;
 }) => {
   const { scrollYProgress } = useScroll();
-  const [visible, setVisible] = useState(true); // Start with visible true
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    // Run this on mount to make sure the navbar is visible initially
-    setVisible(true);
+    setVisible(true); // Ensure navbar is visible on mount
   }, []);
 
   useMotionValueEvent(scrollYProgress, "change", (current) => {
-    // Check if current is not undefined and is a number
     if (typeof current === "number") {
       let direction = current! - scrollYProgress.getPrevious()!;
-
       if (scrollYProgress.get() < 0.05) {
         setVisible(true);
       } else {
-        if (direction < 0) {
-          setVisible(true);
-        } else {
-          setVisible(false);
-        }
+        setVisible(direction < 0); // Show on scroll up, hide on scroll down
       }
     }
   });
 
   return (
     <AnimatePresence mode="wait">
-      <motion.div
-        initial={{
-          opacity: 1,
-          y: 0,
-        }}
-        animate={{
-          y: visible ? 0 : -100,
-          opacity: visible ? 1 : 0,
-        }}
-        transition={{
-          duration: 0.2,
-        }}
-        className={cn(
-          "flex max-w-fit border-white/[0.2] fixed top-10 bg-black-100 inset-x-0 mx-auto border rounded-full shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-[5000] px-10 py-5 items-center justify-center space-x-4",
-          className
-        )}
-      >
-        {navItems.map((navItem: any, idx: number) => (
-          <Link
-            key={`link=${idx}`}
-            href={navItem.link}
-            className={cn(
-              "relative dark:text-neutral-50 items-center flex space-x-1 text-neutral-600 dark:hover:text-neutral-300 hover:text-neutral-500"
-            )}
+      {visible && (  // Ensure navbar is only rendered when visible
+        <motion.div
+          initial={{ opacity: 1, y: 0 }}
+          animate={{ y: visible ? 0 : -100, opacity: visible ? 1 : 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed top-10 inset-x-0 z-[5000] flex items-center justify-center mx-auto"
+        >
+          <HoverBorderGradient
+            containerClassName={cn("max-w-fit")}
+            className={cn("px-10 py-5 border rounded-full shadow")}
+            duration={1.5} // Duration of the hover effect (can be adjusted)
+            clockwise={true} // Set the gradient rotation
           >
-            <span className="block sm:hidden">{navItem.icon}</span>
-            <span className="text-sm !cursor-pointer">{navItem.name}</span>
-          </Link>
-        ))}
-      </motion.div>
+            <div className={cn("flex items-center justify-center space-x-4", className)}>
+              {navItems.map((navItem: any, idx: number) => (
+                <Link
+                  key={`link=${idx}`}
+                  href={navItem.link}
+                  className={cn(
+                    "relative dark:text-neutral-50 flex items-center space-x-1 text-neutral-600 dark:hover:text-neutral-300 hover:text-neutral-500"
+                  )}
+                >
+                  <span className="block sm:hidden">{navItem.icon}</span>
+                  <span className="text-sm !cursor-pointer">{navItem.name}</span>
+                </Link>
+              ))}
+            </div>
+          </HoverBorderGradient>
+        </motion.div>
+      )}
     </AnimatePresence>
   );
 };

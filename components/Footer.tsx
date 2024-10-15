@@ -15,7 +15,7 @@ const Footer = () => {
                 <p className="text-white-200 md:mt-10 my-5 text-center bottom-10 left-0 right-0 px-4 md:px-8">
                     Eager to contribute my software development and system architecture skills to drive project success. Let&apos;s connect to discuss how I can add value to your team.
                 </p>
-                <a href="https://drive.google.com/file/d/1wbNEwOporG8Z3a-an2cwT8PdYCqRGRId/view?usp=sharing">
+                <a href="https://drive.google.com/file/d/1Ff9Ub5d2vrjwS8WaumLawjKj4bkAfDEo/view?usp=sharing">
                     <MagicButton
                         title="View my Resume"
                         icon={<FaFilePdf />}

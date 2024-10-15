@@ -57,7 +57,7 @@ export const BentoGridItem = ({
   }, []);
   const handleCopy = () => {
     if (isClient) {
-      const text = "hsu@jsmastery.pro";
+      const text = "2003kunalp@gmail.com";
       navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 3000); 
